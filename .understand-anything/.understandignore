@@ -1,0 +1,28 @@
+# .understandignore — files excluded from understand-anything analysis
+# Auto-generated starter file. Uncomment patterns to exclude them.
+
+# Dependencies / build artifacts
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+
+# Version control
+.git/
+
+# Secrets / credentials (never analyze these)
+.env
+
+# macOS metadata
+.DS_Store
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+*.swo

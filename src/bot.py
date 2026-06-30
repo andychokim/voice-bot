@@ -5,11 +5,11 @@ from fastapi import FastAPI, WebSocket
 from twilio.rest import Client
 # pipecat imports
 # API services
+from pipecat.serializers.twilio import TwilioFrameSerializer
+from pipecat.audio.vad.silero import SileroVADAnalyzer
 from pipecat.services.deepgram.stt import DeepgramSTTService
 from pipecat.services.elevenlabs.tts import ElevenLabsTTSService
 from pipecat.services.anthropic.llm import AnthropicLLMService
-from pipecat.audio.vad.silero import SileroVADAnalyzer
-from pipecat.serializers.twilio import TwilioFrameSerializer
 # WebSocket
 from pipecat.transports.websocket.fastapi import FastAPIWebsocketParams, FastAPIWebsocketTransport
 # Pipeline
@@ -41,3 +41,16 @@ Task: Talk with a receptionist to set up an appointment at an available time.
 
 Context: Your name: Daniel Hobbs. Your number: 4243497863 Your reason: annual checkup. Your details: date of birth is August 3rd, 1992. Your insurance: United HealthCare and Kaiser. Your need on the dates: anytime between July 13th and October 23rd (of course all within this year - 2026). If you receive any confusing response, ask them for clarifications and continue to set up an appointment.
 """
+
+
+
+async def run_bot(transport: FastAPIWebsocketTransport):
+
+    stt = DeepgramSTTService(api_key=os.getenv("DEEPGRAM_API_KEY"))
+    tts = ElevenLabsTTSService(api_key=os.getenv("ELEVENLABS_API_KEY"))
+    llm = AnthropicLLMService(api_key=os.getenv("ANTHROPIC_API_KEY"))
+
+    llm_context = LLMContext(messages=[{"role": "system", "content": SYSTEM_PROMPT}])
+    llm_context_aggregator_pair = LLMContextAggregatorPair(context=llm_context)
+
+
